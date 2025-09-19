@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard Truy xuất nguồn gốc Pro</title>
+
+<!-- Font Awesome & Leaflet & Chart.js & QRious -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {font-family:'Roboto',sans-serif;margin:0;background:linear-gradient(135deg,#e8f5e9,#c8e6c9);color:#2e7d32;}
+header{display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem;background:rgba(46,125,50,0.2);backdrop-filter:blur(10px);position:sticky;top:0;z-index:1000;}
+header h1{margin:0;font-weight:700;}
+header button{background:#2e7d32;color:white;border:none;border-radius:8px;padding:0.5rem 1rem;cursor:pointer;transition:0.3s;}
+header button:hover{background:#1b5e20;}
+main{max-width:1200px;margin:2rem auto;padding:2rem;}
+/* Timeline */
+.timeline-container{display:flex;justify-content: space-between;margin-bottom:2rem;flex-wrap:wrap;}
+.timeline-card{flex:1;background:#f1f8e9;margin:0.5rem;padding:1rem;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.15);text-align:center;transition: transform 0.3s, background 0.3s;position:relative;cursor:pointer;}
+.timeline-card.active{background:#a5d6a7;transform:scale(1.05);}
+.timeline-card i{font-size:2rem;margin-bottom:0.5rem;color:#2e7d32;}
+.timeline-card h3{margin:0.5rem 0;}
+.timeline-card .tooltip{position:absolute;top:-60px;left:50%;transform:translateX(-50%);background:#2e7d32;color:white;padding:0.3rem 0.5rem;border-radius:6px;font-size:0.85rem;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+.timeline-card:hover .tooltip{opacity:1;}
+/* Info cards */
+.info-grid{display:grid;grid-template-columns: repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:2rem;}
+.info-card{background:#f1f8e9;padding:1rem;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.15);transition: transform 0.3s;}
+.info-card:hover{transform: translateY(-5px);}
+.info-card h4{margin-top:0;color:#1b5e20;}
+.info-card p{margin:0.5rem 0;}
+/* QR Code */
+.qr-container{text-align:center;margin-bottom:2rem;background:#ffffffaa;padding:1rem;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.15);}
+.qr-container h2{margin-bottom:1rem;}
+#qr{margin:auto; display:block;}
+.qr-container button{margin-top:0.5rem;background:#2e7d32;color:white;border:none;border-radius:8px;padding:0.5rem 1rem;cursor:pointer;transition:0.3s;}
+.qr-container button:hover{background:#1b5e20;}
+/* Map */
+#map{width:100%;height:450px;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.15);margin-bottom:2rem;}
+/* KPI chart */
+.kpi-container{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;}
+.kpi-card{flex:1;min-width:200px;background:#f1f8e9;padding:1rem;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.15);text-align:center;}
+.kpi-card h4{margin:0;color:#1b5e20;}
+.kpi-card canvas{margin-top:0.5rem;}
+@media(max-width:768px){.timeline-container{flex-direction:column;}.timeline-card{margin-bottom:1rem;}}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Truy xuất nguồn gốc cà phê</h1>
+<button id="downloadQR">Tải QR</button>
+</header>
+
+<main>
+<!-- Timeline -->
+<div class="timeline-container">
+  <div class="timeline-card active" id="step1"><i class="fa-solid fa-tractor"></i><h3>Nông dân</h3><div class="tooltip" id="tooltip1"></div></div>
+  <div class="timeline-card" id="step2"><i class="fa-solid fa-people-roof"></i><h3>Hợp tác xã</h3><div class="tooltip" id="tooltip2"></div></div>
+  <div class="timeline-card" id="step3"><i class="fa-solid fa-industry"></i><h3>Nhà máy</h3><div class="tooltip" id="tooltip3"></div></div>
+  <div class="timeline-card" id="step4"><i class="fa-solid fa-truck-fast"></i><h3>Logistics</h3><div class="tooltip" id="tooltip4"></div></div>
+</div>
+
+<!-- Info Cards -->
+<div class="info-grid">
+  <div class="info-card" id="farmCard"><h4>Nông dân</h4><p>Đang tải...</p></div>
+  <div class="info-card" id="coopCard"><h4>Hợp tác xã</h4><p>Đang tải...</p></div>
+  <div class="info-card" id="factoryCard"><h4>Nhà máy</h4><p>Đang tải...</p></div>
+  <div class="info-card" id="logisticsCard"><h4>Logistics</h4><p>Đang tải...</p></div>
+  <div class="info-card" id="certCard"><h4>Chứng nhận</h4><p>Đang tải...</p></div>
+  <div class="info-card" id="distributionCard"><h4>Nơi phân phối</h4><p>Đang tải...</p></div>
+</div>
+
+<!-- KPI -->
+<div class="kpi-container">
+  <div class="kpi-card"><h4>Tổng khối lượng (kg)</h4><canvas id="kpiWeight" height="100"></canvas></div>
+  <div class="kpi-card"><h4>Số lô hoàn thành</h4><canvas id="kpiBatch" height="100"></canvas></div>
+  <div class="kpi-card"><h4>Tiến độ (%)</h4><canvas id="kpiProgress" height="100"></canvas></div>
+</div>
+
+<!-- QR Code -->
+<div class="qr-container">
+<h2>Mã QR sản phẩm</h2>
+<canvas id="qr"></canvas>
+</div>
+
+<!-- Map -->
+<div id="map"></div>
+
+<footer>
+<p>© 2025 Trung Nguyên Legend</p>
+</footer>
+
+<script>
+// Dữ liệu localStorage giả lập
+const farmData = JSON.parse(localStorage.getItem('order_farm')) || {batchName:'Lô demo', origin:'Buôn Ma Thuột', weight:5000, timestamp:Date.now()};
+const coopData = JSON.parse(localStorage.getItem('order_coop')) || {processingDetails:'Chế biến thử', timestamp:Date.now()};
+const factoryData = JSON.parse(localStorage.getItem('factoryData')) || {factory:'Nhà máy thử', type:'Rang xay', timestamp:Date.now()};
+const logisticsData = JSON.parse(localStorage.getItem('logisticsData')) || {provider:'Logistics thử', date:Date.now()};
+const certData = {certs:['UTZ','ISO 22000','Fairtrade']};
+const distributionData = {places:['E-Coffee','AEON','Xuất khẩu Nhật/EU']};
+
+// Info Cards
+document.getElementById('farmCard').innerHTML = `<h4>Nông dân</h4><p>Tên lô: ${farmData.batchName}<br>Xuất xứ: ${farmData.origin}<br>Khối lượng: ${farmData.weight} kg<br>Ngày: ${new Date(farmData.timestamp).toLocaleDateString()}</p>`;
+document.getElementById('coopCard').innerHTML = `<h4>Hợp tác xã</h4><p>${coopData.processingDetails}<br>Ngày: ${new Date(coopData.timestamp).toLocaleDateString()}</p>`;
+document.getElementById('factoryCard').innerHTML = `<h4>Nhà máy</h4><p>${factoryData.factory} – ${factoryData.type}<br>Ngày: ${new Date(factoryData.timestamp).toLocaleDateString()}</p>`;
+document.getElementById('logisticsCard').innerHTML = `<h4>Logistics</h4><p>${logisticsData.provider}<br>Ngày: ${new Date(logisticsData.date).toLocaleDateString()}</p>`;
+document.getElementById('certCard').innerHTML = `<h4>Chứng nhận</h4><p>${certData.certs.join(', ')}</p>`;
+document.getElementById('distributionCard').innerHTML = `<h4>Nơi phân phối</h4><p>${distributionData.places.join(', ')}</p>`;
+
+// Tooltip timeline
+document.getElementById('tooltip1').innerText = new Date(farmData.timestamp).toLocaleDateString();
+document.getElementById('tooltip2').innerText = new Date(coopData.timestamp).toLocaleDateString();
+document.getElementById('tooltip3').innerText = new Date(factoryData.timestamp).toLocaleDateString();
+document.getElementById('tooltip4').innerText = new Date(logisticsData.date).toLocaleDateString();
+
+// QR Code
+const qr = new QRious({element: document.getElementById('qr'), value: JSON.stringify({farmData,coopData,factoryData,logisticsData,certData,distributionData}), size:220, background:'white', foreground:'#2e7d32'});
+document.getElementById('downloadQR').addEventListener('click',()=>{const a=document.createElement('a');a.href=qr.toDataURL();a.download='QRCode.png';a.click();});
+
+// KPI charts
+new Chart(document.getElementById('kpiWeight').getContext('2d'), {type:'bar',data:{labels:['Tổng khối lượng'],datasets:[{label:'kg',data:[farmData.weight],backgroundColor:'#2e7d32'}]},options:{responsive:true,plugins:{legend:{display:false}}}});
+new Chart(document.getElementById('kpiBatch').getContext('2d'), {type:'doughnut',data:{labels:['Hoàn thành','Chưa'],datasets:[{data:[4,0],backgroundColor:['#2e7d32','#a5d6a7']}]},options:{responsive:true}});
+new Chart(document.getElementById('kpiProgress').getContext('2d'), {type:'doughnut',data:{labels:['Tiến độ'],datasets:[{data:[100,0],backgroundColor:['#2e7d32','#a5d6a7']}]},options:{responsive:true}});
+
+// Map
+const map = L.map('map').setView([12.5,108.0],6);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{ attribution:'© OpenStreetMap' }).addTo(map);
+const points = [
+  {lat:12.7,lng:108.05,name:'Nông dân',info:`Ngày: ${new Date(farmData.timestamp).toLocaleDateString()}`},
+  {lat:12.8,lng:108.1,name:'Hợp tác xã',info:`Ngày: ${new Date(coopData.timestamp).toLocaleDateString()}`},
+  {lat:11.95,lng:108.45,name:'Nhà máy',info:`Ngày: ${new Date(factoryData.timestamp).toLocaleDateString()}`},
+  {lat:10.77,lng:106.7,name:'Logistics',info:`Ngày: ${new Date(logisticsData.date).toLocaleDateString()}`}
+];
+const latlngs = [];
+const markers = [];
+points.forEach((pt,i)=>{
+  const marker = L.marker([pt.lat,pt.lng]).addTo(map).bindPopup(`<b>${pt.name}</b><br>${pt.info}`);
+  markers.push(marker);
+  latlngs.push([pt.lat,pt.lng]);
+});
+
+// Animated polyline & timeline highlight
+let animatedLine = L.polyline([], {color:'#2e7d32', weight:5, opacity:0.8}).addTo(map);
+let index = 0;
+function animateLine(){
+  if(index<latlngs.length){
+    animatedLine.addLatLng(latlngs[index]);
+    markers[index].bounce({duration:500,height:100});
+    markers[index].openPopup();
+    document.querySelectorAll('.timeline-card').forEach(c=>c.classList.remove('active'));
+    document.getElementById(`step${index+1}`).classList.add('active');
+    index++;
+    setTimeout(animateLine,1500);
+  }
+}
+animateLine();
+map.fitBounds(L.polyline(latlngs).getBounds());
+
+// Marker bounce helper
+L.Marker.prototype.bounce=function(options){options=options||{duration:500,height:100};let el=this._icon;if(!el)return;el.style.transition=`transform ${options.duration}ms`;el.style.transform=`translateY(-${options.height}px)`;setTimeout(()=>{el.style.transform='translateY(0)'},options.duration);return this;}
+</script>
+
+</body>
+</html>
