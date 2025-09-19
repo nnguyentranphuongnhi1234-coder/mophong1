@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bước 3 - Nhà máy chế biến</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9); /* xanh lá nhẹ */
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 60px auto;
+      background: #f1f8e9; /* xanh lá trầm dịu */
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      padding: 30px 25px;
+      animation: fadeIn 0.8s ease;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2e7d32; /* xanh lá trầm */
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px 10px;
+      margin-bottom: 20px;
+      border: 1px solid #a5d6a7;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border 0.3s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: #2e7d32;
+      outline: none;
+    }
+
+    .btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #2e7d32; /* xanh lá trầm */
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .btn i {
+      margin-right: 8px;
+    }
+
+    .btn:hover {
+      background-color: #1b5e20;
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1><i class="fa-solid fa-industry"></i> Bước 3: Nhà máy chế biến</h1>
+
+    <label for="factoryName">Tên nhà máy</label>
+    <input type="text" id="factoryName" placeholder="VD: Nhà máy Trung Nguyên" required>
+
+    <label for="processingDate">Ngày chế biến</label>
+    <input type="date" id="processingDate" required>
+
+    <label for="processedNote">Ghi chú chế biến</label>
+    <textarea id="processedNote" rows="3" placeholder="VD: Rang xay, đóng gói, kiểm tra chất lượng..."></textarea>
+
+    <label for="productType">Loại sản phẩm</label>
+    <select id="productType" required>
+      <option value="">-- Chọn loại sản phẩm --</option>
+      <option value="coffee">Cà phê</option>
+      <option value="tea">Trà</option>
+      <option value="cacao">Cacao</option>
+    </select>
+
+    <button class="btn" onclick="submitFactory()">
+      <i class="fa-solid fa-check"></i> Xác nhận & Tiếp tục
+    </button>
+  </div>
+
+  <script>
+    function submitFactory() {
+      const factory = document.getElementById('factoryName').value;
+      const date = document.getElementById('processingDate').value;
+      const note = document.getElementById('processedNote').value;
+      const type = document.getElementById('productType').value;
+
+      if (!factory || !date || !type) {
+        alert("Vui lòng nhập đầy đủ thông tin.");
+        return;
+      }
+
+      const factoryData = {
+        factory: factory,
+        date: date,
+        note: note,
+        type: type
+      };
+
+      localStorage.setItem('factoryData', JSON.stringify(factoryData));
+      // Chuyển sang bước tiếp theo
+      window.location.href = 'step4.html';
+    }
+  </script>
+</body>
+</html>
