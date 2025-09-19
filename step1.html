@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bước 1 - Nông dân tạo đơn hàng</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9); /* xanh lá nhẹ */
+    color: #2e7d32; /* chữ xanh lá trầm */
+    overflow-x: hidden;
+  }
+
+  header, footer {
+    text-align: center;
+    padding: 1rem 2rem;
+    background: rgba(46,125,50,0.15);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+
+  header h1, footer p {
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  main {
+    max-width: 600px;
+    margin: 2rem auto 3rem auto;
+    background: #f1f8e9; /* xanh lá trầm dịu */
+    padding: 2.5rem 2rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    animation: fadeSlideIn 0.8s ease forwards;
+  }
+
+  form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  form input[type="text"],
+  form input[type="number"] {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #a5d6a7;
+    outline: none;
+    transition: box-shadow 0.3s ease, border 0.3s;
+  }
+
+  form input[type="text"]:focus,
+  form input[type="number"]:focus {
+    box-shadow: 0 0 8px #2e7d32;
+    border-color: #2e7d32;
+  }
+
+  button {
+    margin-top: 1.8rem;
+    width: 100%;
+    padding: 1rem 0;
+    background: #2e7d32;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    color: white;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s;
+  }
+
+  button i {
+    margin-right: 8px;
+  }
+
+  button:hover {
+    background: #1b5e20;
+    box-shadow: 0 8px 20px rgba(46,125,50,0.6);
+    transform: translateY(-2px);
+  }
+
+  /* Progress Bar */
+  .progress-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+
+  .progress-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    color: #a5d6a7;
+    font-weight: 700;
+  }
+
+  .progress-step::after {
+    content: "";
+    position: absolute;
+    top: 12px;
+    right: -50%;
+    height: 4px;
+    width: 100%;
+    background: #a5d6a7;
+    z-index: -1;
+    transition: background-color 0.3s ease;
+  }
+
+  .progress-step:last-child::after {
+    content: none;
+  }
+
+  .progress-step.active {
+    color: #2e7d32;
+  }
+
+  .progress-step.active::after {
+    background: #2e7d32;
+  }
+
+  @keyframes fadeSlideIn {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    main {
+      margin: 1rem;
+      padding: 1.8rem 1.4rem 2.5rem;
+    }
+    button { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Quy trình truy xuất nguồn gốc cà phê</h1>
+</header>
+
+<main>
+  <nav class="progress-bar" aria-label="Progress">
+    <div class="progress-step active" aria-current="step">Nông dân</div>
+    <div class="progress-step">Hợp tác xã</div>
+    <div class="progress-step">Nhà máy</div>
+    <div class="progress-step">Logistics</div>
+  </nav>
+
+  <form id="farmerForm" aria-label="Form tạo đơn hàng nông dân">
+    <label for="batchName">Tên lô hàng</label>
+    <input id="batchName" name="batchName" type="text" value="Cà phê hạt rang Trung Nguyên Legend" required aria-required="true" />
+
+    <label for="origin">Xuất xứ</label>
+    <input id="origin" name="origin" type="text" value="Buôn Ma Thuột – Đắk Lắk" required aria-required="true" />
+
+    <label for="weight">Khối lượng (kg)</label>
+    <input id="weight" name="weight" type="number" value="5000" required min="1" aria-required="true" />
+
+    <button type="submit" aria-label="Tạo đơn hàng và sang bước 2">
+      <i class="fa-solid fa-check"></i> Tạo đơn hàng & Tiếp tục
+    </button>
+  </form>
+</main>
+
+<footer>
+  <p>© 2025 Trung Nguyên Legend</p>
+</footer>
+
+<script>
+  document.getElementById('farmerForm').addEventListener('submit', e => {
+    e.preventDefault();
+
+    const data = {
+      batchName: e.target.batchName.value.trim(),
+      origin: e.target.origin.value.trim(),
+      weight: Number(e.target.weight.value),
+      timestamp: new Date().toISOString()
+    };
+
+    if (!data.batchName || !data.origin || data.weight <= 0) {
+      alert('Vui lòng nhập đầy đủ và hợp lệ các thông tin.');
+      return;
+    }
+
+    localStorage.setItem('order_farm', JSON.stringify(data));
+    window.location.href = 'step2.html';
+  });
+</script>
+</body>
+</html>
