@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bước 4 - Logistics vận chuyển</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9); /* xanh lá nhẹ */
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 60px auto;
+      background: #f1f8e9; /* xanh lá trầm dịu */
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      padding: 30px 25px;
+      animation: fadeIn 0.8s ease;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2e7d32; /* xanh lá trầm */
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px 10px;
+      margin-bottom: 20px;
+      border: 1px solid #a5d6a7;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border 0.3s;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #2e7d32;
+      outline: none;
+    }
+
+    .btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #2e7d32; /* xanh lá trầm */
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .btn i {
+      margin-right: 8px;
+    }
+
+    .btn:hover {
+      background-color: #1b5e20;
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1><i class="fa-solid fa-truck-fast"></i> Bước 4: Logistics vận chuyển</h1>
+
+    <label for="logisticsProvider">Đơn vị vận chuyển</label>
+    <input type="text" id="logisticsProvider" placeholder="VD: Trung Nguyên Logistics" required>
+
+    <label for="deliveryDate">Ngày vận chuyển</label>
+    <input type="date" id="deliveryDate" required>
+
+    <label for="transportNote">Ghi chú vận chuyển</label>
+    <textarea id="transportNote" rows="3" placeholder="VD: Vận chuyển đến cảng Hồ Chí Minh, container lạnh..."></textarea>
+
+    <button class="btn" onclick="submitTransport()">
+      <i class="fa-solid fa-check"></i> Xác nhận & Tiếp tục
+    </button>
+  </div>
+
+  <script>
+    function submitTransport() {
+      const provider = document.getElementById('logisticsProvider').value;
+      const date = document.getElementById('deliveryDate').value;
+      const note = document.getElementById('transportNote').value;
+
+      if (!provider || !date) {
+        alert("Vui lòng nhập đầy đủ thông tin.");
+        return;
+      }
+
+      const logisticsData = {
+        provider: provider,
+        date: date,
+        note: note
+      };
+
+      localStorage.setItem('logisticsData', JSON.stringify(logisticsData));
+      // Chuyển sang bước kết quả
+      window.location.href = 'result.html';
+    }
+  </script>
+</body>
+</html>
