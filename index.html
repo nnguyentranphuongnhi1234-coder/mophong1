@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hệ thống truy xuất nguồn gốc cà phê</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body, html { font-family: 'Roboto', sans-serif; height: 100%; background: linear-gradient(135deg, #2e4a27, #4a6b36); color: #fff; }
+
+  header { text-align: center; padding: 2rem 1rem; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); }
+  header h1 { font-size: 2rem; font-weight: 700; letter-spacing: 1px; }
+  header p { margin-top: 0.5rem; font-size: 1rem; color: #dcdcdc; }
+
+  main { max-width: 900px; margin: 3rem auto; padding: 2rem; background: rgba(255,255,255,0.05); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+
+  .step-container { display: flex; justify-content: space-between; position: relative; margin-top: 3rem; }
+  .step-line { position: absolute; top: 50%; left: 5%; right: 5%; height: 4px; background: rgba(255,255,255,0.2); transform: translateY(-50%); z-index: 0; border-radius: 2px; }
+  .step-card { background: rgba(255,255,255,0.1); padding: 1.8rem 1rem; border-radius: 12px; text-align: center; cursor: pointer; flex: 1; margin: 0 10px; transition: transform 0.3s, box-shadow 0.3s; position: relative; z-index: 1; }
+  .step-card:hover { transform: translateY(-10px); box-shadow: 0 12px 25px rgba(0,0,0,0.6); }
+
+  .step-card i { font-size: 2.5rem; margin-bottom: 0.8rem; color: #dcdcdc; transition: color 0.3s; }
+  .step-card:hover i { color: #a8ff60; }
+
+  .step-card h2 { margin-bottom: 0.5rem; font-size: 1.1rem; font-weight: 700; }
+  .step-card p { font-size: 0.95rem; color: #dcdcdc; }
+
+  footer { text-align: center; padding: 1.5rem 1rem; margin-top: 3rem; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); }
+  footer p { font-size: 0.9rem; }
+
+  @media(max-width:800px){
+    .step-container { flex-direction: column; align-items: center; }
+    .step-card { margin: 10px 0; width: 80%; }
+    .step-line { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Hệ thống truy xuất nguồn gốc cà phê</h1>
+  <p>Minh bạch – Chuẩn hóa – Tin cậy</p>
+</header>
+
+<main>
+  <h2 style="text-align:center;">Chọn chức năng</h2>
+  
+  <div class="step-container">
+    <div class="step-line"></div>
+    
+    <div class="step-card" onclick="location.href='step1.html'">
+      <i class="fas fa-seedling"></i>
+      <h2>Nông dân tạo đơn hàng</h2>
+      <p>Nhập thông tin lô hàng và tạo QR code</p>
+    </div>
+    <div class="step-card" onclick="location.href='step2.html'">
+      <i class="fas fa-handshake"></i>
+      <h2>Hợp tác xã xác nhận</h2>
+      <p>Kiểm tra chất lượng và cập nhật lô hàng</p>
+    </div>
+    <div class="step-card" onclick="location.href='step3.html'">
+      <i class="fas fa-industry"></i>
+      <h2>Nhà máy chế biến</h2>
+      <p>Rang, xay, đóng gói và chứng nhận chất lượng</p>
+    </div>
+    <div class="step-card" onclick="location.href='step4.html'">
+      <i class="fas fa-truck"></i>
+      <h2>Logistics vận chuyển</h2>
+      <p>Cập nhật vận chuyển và bản đồ</p>
+    </div>
+    <div class="step-card" onclick="location.href='result.html'">
+      <i class="fas fa-tachometer-alt"></i>
+      <h2>Dashboard kết quả</h2>
+      <p>Xem QR code, timeline và bản đồ vận chuyển</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>© 2025 Trung Nguyên Legend - Hệ thống truy xuất nguồn gốc cà phê</p>
+</footer>
+
+</body>
+</html>
